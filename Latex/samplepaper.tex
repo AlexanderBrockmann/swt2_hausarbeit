@@ -161,7 +161,7 @@ public Shop getShop(int shopOID){
 \break
 \textbf{Shop}: Die Methode \textbf{\textit{calculateCustomerCount}} iteriert über die Liste seiner Sensoren und summiert deren Kunden auf.
 Darauf hin iteriert die Methode über die Shops die dem aktuellen Shop zugeordnet sind und ruft darauf \textbf{\textit{calculateCustomerCount}} auf, um die Anzahl der zurück gegebenen Kunden aufzusummieren.
-Die Methode liefert die aufsummierte Anzahl an Kunden pro Shop und Sensor zurück.
+Die Methode liefert die aufsummierte Anzahl an Kunden in dem Shop zurück.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateCustomerCount(){
 	int customerCount = 0;
@@ -177,7 +177,7 @@ public int calculateCustomerCount(){
 }
 \end{lstlisting}
 
-Die Methode \textbf{\textit{calculateUsage}}, berechnet die momentane Auslastung eines Shops, basierend auf seiner Kapazität, der aktuellen Anzahl seiner Kunden und der Anzahl von Kunden seiner Shops.
+Die Methode \textbf{\textit{calculateUsage}}, berechnet die momentane Auslastung eines Shops basierend auf seiner Kapazität, der aktuellen Anzahl seiner Kunden und der Anzahl von Kunden seiner untergeordneten SensorAreas.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateUsage(){
 	int customerCount = 0;
@@ -234,7 +234,8 @@ Die gewählte Datenbank ist eine MariaDB, da diese frei verfügbare OpenSource-L
 Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. Außerdem können Anwendungen, anders als bei einer In-Memory Datenbank, unabhängig voneinander auf die Datenbank zugreifen.
 Ich habe mich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert. Der Nachteil an Spring Data JPA ist, dass weitere Abhängigkeiten in den Code geladen werden.
 
-Eine Alternative zu MariaDB wäre eine NoSQL Datenbank, ich habe mich dagegen entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL das nicht bietet.
+Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokumentenorientierte Datenbank.
+Ich habe mich gegen diese Form von Datenbanken entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL dies nicht bietet.
 Für eine NoSQL Datenbank würde sprechen, dass man die Sensordaten welche mit einem Zeitstempel versehen werden in eine Zeitreihen-Datenbank auslagern kann.
 
 Weitere Datenbankenmodelle wären zum Beispiel eine dokumentenorientierte Datenbank oder Graphdatenbank. Beide Modelle eignen sich für diesen Anwendungsfall nicht, da weder mit Dokumenten noch mit Graphen gearbeitet wird.
@@ -257,21 +258,23 @@ Der MqttService funktioniert nach dem Publish-Subscribe-Prinzip. Der MqttService
 Der MqttBroker dient als Middleware, es wird das MQTT-Protokoll verwendet und die Kommunikation ist asynchron. \\
 
 Die nach außen bereitgestellten Schnittstellen sind vom Backend ausgehend REST-Schnittstellen, um Metainformationen anzufordern, wie zum Beispiel die aktuelle Auslastung eines Shops.
-Außerdem eine Schnittstelle die den besten Weg basierend auf beispielsweise dem aktuellen Standort, der bei der Anfrage mit geliefert wird, zurück gibt.
+Außerdem gibt es eine Schnittstelle die den besten Weg basierend auf dem aktuellen Standort und dem ausgewählten ShopType zurückgibt.
+Beide Daten werden bei der Anfrage als Parameter mitgegeben.
 Diese Schnittstellen werden im Regelfall vom Frontend angesprochen.
 
-Außerdem stellt der Datenbankserver eine Schnittstelle bereit, um mit SQL Daten anzufordern/zu speichern, allerdings wird diese nur vom Backend angesprochen und sollte von außen nur gesichert erreichbar sein. \\
+Außerdem stellt der Datenbankserver eine Schnittstelle bereit, um via SQL Daten anzufordern und zu speichern.
+Dieser Endpunkt wird allerdings nur vom Backend über JDBC angesprochen und sollte von außen nicht erreichbar sein.
 
 \subsection{Begründung}
-Die REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System darstellt.
-Dadurch ist gewährleistet, dass weitere Services einfach erweitert, ergänzt und ersetzt werden können, ohne die Schnittstelle selbst zu verändern.
+Eine  REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System ermöglicht.
+Dadurch ist gewährleistet, dass weitere Services einfach ergänzt und ersetzt beziehungsweise bestehende Services erweitert werden können, ohne dass die Schnittstelle selbst angepasst werden müssen.
 
 Eine Alternative wäre es, Services direkt über die jeweilige IP anzusprechen.
 Der Vorteil wäre, dass man dadurch eine größere Flexibilität und eine bessere Performance realisieren kann.
 Der Nachteil dabei ist, dass der Programmierer die Kommunikation selbst implementieren muss und anpassen muss, sollte es zu Änderungen im System kommen.
 Außerdem bietet REST die Möglichkeit Services einfach nach außen, beispielsweise ins World Wide Web, verfügbar zu machen.
 
-JDBC wird verwendet, da die Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbank Server kommunizieren kann.
+JDBC wird verwendet, da es Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbankserver kommunizieren kann.
 Ähnlich wie bei REST könnte man auch hier eine direkte Kommunikation implementieren, muss dann allerdings auch den Aufwand betreiben und bei Änderungen die Kommunikation anpassen.
 
 Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den Sensoren vereinfacht.
@@ -282,7 +285,7 @@ Hier wieder das Problem, man muss über eine Middleware arbeiten, welche nicht z
 \newpage
 \bibliography{lit}
 Tilkov, Stefan, et al. REST und HTTP: Entwicklung und 
-Integration nach dem Architekturstildes Web. dpunkt. verlag, 
+Integration nach dem Architekturstil des Web. dpunkt. verlag, 
 2015
 \bibliographystyle{alpha}
 
