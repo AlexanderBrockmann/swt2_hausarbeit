@@ -1,0 +1,30 @@
+SmartShopService
+
+public int getAuslastung(int shopOID){
+	try(
+		Shop tmp = datenbankService.getShop(shopOID);
+	)catch(NullpointerException e){
+		return -1;
+	}
+	return tmp.getAuslastung();
+}
+
+DatenbankService
+
+public Shop getShop(int shopOID){
+	return getShopByPrimaryKey(shopOID);
+}
+
+Shop
+
+public int getAuslastung(){
+	int auslastung = 0;
+	if(shopList.isEmpty()){
+		for (Shop tmp : shopList){
+			auslastung += tmp.getAuslastung();
+		}
+	}else{
+		auslastung = (capacity - customerCount);
+	}
+	return auslastung;
+}
