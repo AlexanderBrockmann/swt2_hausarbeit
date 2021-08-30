@@ -225,7 +225,7 @@ Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokume
 Ich habe mich gegen diese Form von Datenbanken entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL dies nicht bietet.
 Da die Sensordaten mit einem Zeitstempel versehen werden, könnten sie in einer Zeitreihen-Datenbank gespeichert werden.
 
-Weitere Datenbankenmodelle wären zum Beispiel eine dokumentenorientierte Datenbank oder Graphdatenbank. Beide Modelle eignen sich für diesen Anwendungsfall nicht, da weder mit Dokumenten noch mit Graphen gearbeitet wird.
+Graphdatenbank eignen sich für diesen Anwendungsfall nicht, da die zu speichernden Daten nicht in einem Graph dargestellt werden können.
 \newpage
 
 \section{Kommunikation}
@@ -266,7 +266,9 @@ JDBC wird verwendet, da es Middleware ein standardisiertes Interface bietet und 
 Darüber hinaus muss im Datenbankserver eine andere Protokollform aktiviert werden, über die dann kommuniziert werden kann.
 
 Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den Sensoren vereinfacht.
-So muss der Programmierer sich nicht darum kümmern wie viele Sensoren existieren und muss nur eingehende Änderungen verarbeiten.
+So muss der Programmierer sich nicht darum kümmern, wie viele Sensoren existieren und muss nur eingehende Änderungen verarbeiten.
+Außerdem werden Änderungen in den Sensordaten so automatisch an den Server gesendet und der Server muss diese Änderungen nicht aktiv abfragen.
+So wird Busy Waiting vermieden.
 Hier wieder das Problem, man muss über eine Middleware arbeiten, welche nicht zwangsläufig optimiert funktioniert.
 
 
