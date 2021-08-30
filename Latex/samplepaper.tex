@@ -54,6 +54,7 @@ Zur Anwendungsdomäne gehören folgende Entitäten:
 	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit, die Kapazität seines zugeordneten Supermarktes sowie dessen momentane Auslastung. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attribute werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereitgestellt.
 	\item[Nutzer] Ein Nutzer hat einen Standort, welcher vom Client bei der Anfrage an das System weitergegeben wird. Zusätzlich wählt der Nutzer aus, nach welcher Art Shop er suchen möchte. Auf dieser Basis bekommt er einen Shop und gegebenenfalls eine Route empfohlen.
 	\item[GeoPosition] Die GeoPosition gibt die geografische Position basierend auf dem Längen- und Breitengrad an.
+	\item[SensorArea] Eine SensorArea ist ein abstraktes Konstrukt, das jeweils von Sensor und Shop implementiert wird. Er stellt einen Bereich dar der durch einen oder mehr Sensoren abgedeckt werden kann.
 	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften, beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Zusätzlich wird noch eine Liste an SensorAreas gespeichert.
 	\item[ShopType] Der ShopType gibt an, um was für eine Art Shop es sich handelt.
 Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
@@ -69,25 +70,27 @@ Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität bere
 \subsection{Beschreibung der Systemarchitektur}
 
 
-Der Server, auf dem die Anwendung läuft, ist ein Sun Ice 9001 Server.
-Dieser wird mit dem Betriebssystem Ubuntu 20.04 LTS betrieben.
-Darin wird zum einen die SmartAi.py ausgeführt, welche in der Laufzeitumgebung Python 3.5 läuft.
+Der Server, auf dem die Anwendung läuft, kann beispielsweise ein Sun Ice 9001 sein.
+Dieser wird mit dem Betriebssystem Ubuntu 20.04 LTS betrieben, da es Open Source, kostenlos und gut dokumentiert ist.
+Darin wird zum einen die SmartAi.py ausgeführt, welche in der Laufzeitumgebung Python 3.5 läuft. 
+Python ist eine gängige Sprache für KI-Lösungen verwendet wird.
 Zum anderen wird dort die SmartShopping.jar in der Laufzeitumgebung Java 14 ausgeführt.
-SmartShopping.jar stellt einen Embedded Tomcat bereit.
-Die beiden Anwendungen kommunizieren intern via Rest-Schnittellen mit dem HTTP-Protokoll.
+Auf Grund der im Studium gesammelten Erfahrung wurde sich für Java in Kombination mit Spring Boot entschieden.
+Die Spring-Applikation stellt den in Spring Boot integrierten Embedded Tomcat bereit.
+Die SmartAi.py und die SmartShopping.jar kommunizieren intern via REST-Schnittellen mit dem HTTP-Protokoll.
 Mit dem Datenbankserver kommunizieren sie mit dem JDBC-Protokoll.
-Der Datenbankserver ist ein IBM z15.
-Auf diesem läuft ein MariaDB 10.6.4.
-In der Datenbank gibt es die Schematas SensorData und Shop.
-Des Weiteren liefert das Backend den Frontend Client aus.
-Der Frontend Client kann dann beispielsweise auf einem Chromebook ausgeliefert werden.
-Das Frontend kann dann in einem Brwoser, zum Beispiel in Google Chrome, aufgerufen werden.
+Der Datenbankserver wird beispielsweise auf einem IBM z15 ausgeliefert.
+Auf diesem läuft eine MariaDB 10.6.4.
+In der Datenbank gibt es die Schemata SensorData und Shop.
+
+Des Weiteren liefert das Backend den Frontend Client in Form einer Thymeleaf\footnote{\url{https://www.thymeleaf.org/}}-Anwendung aus.
+Der Frontend Client wird beispielsweise auf einem Chromebook ausgeliefert und kann dann über einen Browser beispielsweise Chrome aufgerufen werden.
 Backend und Frontend kommunizieren über das HTTPS-Protokoll.
 Außerdem werden im Verteilungsdiagramm ein MqttBroker und die dazu gehörenden Sensoren dargestellt.
 Da der Fokus nicht auf dem Erheben der Daten liegt, wird nicht näher auf den MqttBroker und die dazu gehörenden Sensoren eingegangen.
 
 \subsection{Einordnung der Architekturentscheidungen}
-Der Architekturstil nach Starke ist ein heterogenes System, da die Kommunikation zwischen den Services über REST-Schnittstellen realisiert ist.
+Der Architekturstil nach Starke ist ein heterogenes System, da die Kommunikation zwischen den Services über REST-Schnittstellen realisiert ist (vgl. \cite{starke2015effektive}).
 Des Weiteren erfolgt die Kommunikation zwischen Anwendung via HTTP, HTTPS und JDBC.
 Die Architektur wurde gewählt, um die Anwendung möglichst modular zu halten und so eine gute Austauschbarkeit von Komponenten zu gewährleisten.
 
@@ -119,17 +122,17 @@ Durch dieses Beobachter-Muster ist es möglich, weitere Daten über separate Beo
 
 
 \subsection{Begründung}
+In diesem Kontext wurde das Kompositum-Muster gewählt, da es für die Darstellung der Beziehung zwischen SensorArea, Sensor und Shop geeignet ist.
+Dabei entspricht SensorArea der Komponente, Sensor einem Blatt und Shop dem Kompositum.
 Der Vorteil des Kompositum-Musters ist, dass die SensorArea beliebig erweitert werden kann und es dabei zweitrangig ist, um welche Attribute und Methoden die Shops beziehungsweise andere Komponenten erweitert werden. 
-Ein Nachteil dabei ist, dass die Tiefe ebenfalls beliebig wächst und es so zu einer sehr unübersichtlichen Datenstruktur kommen kann.
-Eine Alternative beziehungsweise Erweiterung wäre das Fabrikmethode-Muster. 
-Dieses Muster erlaubt es uns auf Grundlage der abstrakten Klasse SensorArea weitere Bereiche zu implementieren, ohne dass davon andere Services betroffen sind. 
-Man könnte also einen Shop vom Typ Supermarkt oder vom Typ Einkaufszentrum erzeugen, würde dabei aber die Möglichkeit der Schachtelung verlieren. 
-Um beide Entwurfsmuster möglichst effektiv zu verwenden, wäre eine Kombination denkbar.
-Das Beobachter-Muster wurde gewählt, da es eingehende Signale von den Sensoren beziehungsweise Sensornachrichten automatisch verarbeitet und speichert.
-Dieses Muster könnte durch das Zustands-Muster erweitert, aber nicht ersetzt werden.
-Das Zustands-Muster würde in der konkreten Implementierung ebenfalls auf eingehende Nachrichten warten beziehungsweise reagieren, es könnte beispielsweise als ein Buffer agieren welcher Nachrichten sammelt und erst auf Anfrage Daten weiterleitet oder speichert.
-Dieses Verhalten würde das Beobachter-Muster eher erweitern oder imitieren und ist daher ungeeignet in diesem Kontext.
+Ein weiterer Vorteil des Kompositum-Musters ist die variable Tiefe, da sich so auch komplexe Einkaufszentren mit verschachtelten Shops abbilden lassen.
+Dies ist allerdings auch ein Nachteil, da es zu einer unübersichtlichen Datenstruktur kommen kann.
 
+Das Beobachter-Muster wurde gewählt, da es eingehende Signale von den Sensoren beziehungsweise Sensornachrichten automatisch verarbeitet und speichert.
+Dieses Muster könnte durch das Zustands-Muster ausgetauscht werden.
+Das Zustands-Muster würde in der konkreten Implementierung ebenfalls auf eingehende Nachrichten warten beziehungsweise reagieren, es könnte beispielsweise als ein Buffer agieren welcher Nachrichten sammelt und erst auf Anfrage Daten weiterleitet oder speichert.
+Dadurch ist allerdings der Server für das stetige Abfragen der Daten verantwortlich.
+Dieses sogenannte Busy Waiting ist sehr ressourcenintensiv und sollte daher vermieden werden (vgl. \cite{RJ2021}).
 
 \newpage
 \section{Beschreibung der Kernfunktionalität}
@@ -144,8 +147,8 @@ In dem im Sequenzdiagramm beschriebenen Beispiel möchte ein Client die Auslastu
 Die Methode \textbf{\textit{calculateUsage}} berechnet die aktuelle Auslastung des Shops, welcher über seine ShopOID angefordert wird.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateUsage(int shopOID){
-	Shop tmp = datenbankService.getShop(shopOID);
-	return tmp.calculateUsage();
+	Shop shop = datenbankService.getShop(shopOID);
+	return shop.calculateUsage();
 }
 \end{lstlisting}
 
@@ -218,14 +221,21 @@ Die gewählte Datenbank ist eine MariaDB, welche auf einem eigenen Server ausgel
 Da die Daten einfach strukturiert sind und eine eindeutige ID besitzen, habe ich mich für eine SQL Datenbank entschieden.
 Durch diese Datenstruktur ist ein schneller, sicherer und einfacher Zugriff möglich.
 Die gewählte Datenbank ist eine MariaDB, da diese frei verfügbare OpenSource-Lösung zu MySQL ist.
-Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. Außerdem können Anwendungen, anders als bei einer In-Memory Datenbank, unabhängig voneinander auf die Datenbank zugreifen.
-Ich habe mich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert. Der Nachteil an Spring Data JPA ist, dass weitere Abhängigkeiten in den Code geladen werden.
+Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. 
+Außerdem können Anwendungen, anders als bei einer In-Memory Datenbank, unabhängig voneinander auf die Datenbank zugreifen.
+Ich habe mich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert.
+Außerdem nimmt es dem Programmierer einiges an Arbeit ab.
+Beispielsweise ist es nicht mehr notwendig eigene Abfragen zu definieren, da diese anhand der Methodennamen im entsprechenden Reopsitory Interface generiert werden.
+Darüber hinaus werden die Tabellendefinitionen aus den Klassen generiert, sodass es nicht nötig ist, diese manuell zu erstellen.
+Auch das Mapping von Fremdschlüsselbeziehungen auf die jeweiligen Objekt geschieht automatisch.
+Diese Vorteile überwiegen den Nachteil, dass weitere Abhängigkeiten in den Code geladen werden.
 
 Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokumentenorientierte Datenbank.
 Ich habe mich gegen diese Form von Datenbanken entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL dies nicht bietet.
 Da die Sensordaten mit einem Zeitstempel versehen werden, könnten sie in einer Zeitreihen-Datenbank gespeichert werden.
+Hier wird allerdings die MariaDB verwendet damit das Mapping der Fremdschlüssel durch Spring Data JPA abgewickelt wird.
 
-Graphdatenbank eignen sich für diesen Anwendungsfall nicht, da die zu speichernden Daten nicht in einem Graph dargestellt werden können.
+Graphdatenbanken eignen sich für diesen Anwendungsfall nicht, da die zu speichernden Daten nicht in einem Graph dargestellt werden können.
 \newpage
 
 \section{Kommunikation}
@@ -275,8 +285,6 @@ Hier wieder das Problem, man muss über eine Middleware arbeiten, welche nicht z
 \newpage
 \bibliographystyle{alphadin}
 \bibliography{lit}
-Tilkov, Stefan, et al. REST und HTTP: Entwicklung und 
-Integration nach dem Architekturstil des Web. dpunkt. verlag, 
-2015
+
 
 \end{document}

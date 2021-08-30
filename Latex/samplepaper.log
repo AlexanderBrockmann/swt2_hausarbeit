@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.8.14)  30 AUG 2021 13:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.8.14)  30 AUG 2021 22:02
 entering extended mode
 **./samplepaper.tex
 (samplepaper.tex
@@ -295,9 +295,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 37.
 
-Overfull \hbox (3.98795pt too wide) in paragraph at lines 56--57
+Overfull \hbox (6.76573pt too wide) in paragraph at lines 58--59
 []\OT1/cmr/m/n/10 Der Shop re-pr[]asen-tiert ein Gesch[]aft oder ei-ne An-samm-
-lung von Gesch[]aften
+lung von Gesch[]aften,
  []
 
 [1
@@ -306,32 +306,33 @@ lung von Gesch[]aften
 <images/deployment_diagram.png, id=11, 763.85374pt x 904.37875pt>
 File: images/deployment_diagram.png Graphic file (type png)
 <use images/deployment_diagram.png>
-Package pdftex.def Info: images/deployment_diagram.png  used on input line 65.
+Package pdftex.def Info: images/deployment_diagram.png  used on input line 67.
 (pdftex.def)             Requested size: 347.12354pt x 410.98239pt.
- [2 <./images/deployment_diagram.png>] [3]
-<images/OOD-Klassendiagram.png, id=20, 814.04124pt x 743.77875pt>
+ [2 <./images/deployment_diagram.png>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 86.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 86.
+ [3]
+<images/OOD-Klassendiagram.png, id=22, 814.04124pt x 743.77875pt>
 File: images/OOD-Klassendiagram.png Graphic file (type png)
 <use images/OOD-Klassendiagram.png>
-Package pdftex.def Info: images/OOD-Klassendiagram.png  used on input line 97.
+Package pdftex.def Info: images/OOD-Klassendiagram.png  used on input line 101.
+
 (pdftex.def)             Requested size: 347.12354pt x 317.16293pt.
- [4 <./images/OOD-Klassendiagram.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 118--125
-
- []
-
-[5]
-<images/Sequenzdiagramm.png, id=28, 794.97pt x 382.42876pt>
+ [4 <./images/OOD-Klassendiagram.png>] [5]
+<images/Sequenzdiagramm.png, id=30, 794.97pt x 382.42876pt>
 File: images/Sequenzdiagramm.png Graphic file (type png)
 <use images/Sequenzdiagramm.png>
-Package pdftex.def Info: images/Sequenzdiagramm.png  used on input line 138.
+Package pdftex.def Info: images/Sequenzdiagramm.png  used on input line 142.
 (pdftex.def)             Requested size: 347.12354pt x 166.99121pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 138--141
+Overfull \hbox (15.0pt too wide) in paragraph at lines 142--145
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 138--141
+Underfull \hbox (badness 10000) in paragraph at lines 142--145
 
  []
 
@@ -339,13 +340,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 138--141
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1
-45.
+49.
 
 (C:\Users\brock\AppData\Local\Programs\MiKTeX\tex/latex/base\omscmr.fd
 File: omscmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <7> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 145.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 149.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -353,71 +354,71 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <images/Datamodel.png, id=42, 460.72125pt x 264.99pt>
 File: images/Datamodel.png Graphic file (type png)
 <use images/Datamodel.png>
-Package pdftex.def Info: images/Datamodel.png  used on input line 199.
+Package pdftex.def Info: images/Datamodel.png  used on input line 189.
 (pdftex.def)             Requested size: 347.12354pt x 199.65178pt.
 
-Overfull \hbox (3.7945pt too wide) in paragraph at lines 216--217
-[]\OT1/cmr/m/n/10 Das Feld cu-sto-mer-Count re-pr[]asen-tiert die An-zahl an Ku
-n-
+Overfull \hbox (12.01332pt too wide) in paragraph at lines 205--206
+[]\OT1/cmr/m/n/10 Die da-taO-ID ist ei-ne ein-deu-ti-ge ID und fun-giert als Pr
+im[]arschl[]ussel. 
+ []
+
+
+Overfull \hbox (11.15434pt too wide) in paragraph at lines 207--208
+[]\OT1/cmr/m/n/10 Dieses At-tri-but spei-chert den Zeit-punkt, zu dem das Senso
+rData-
  []
 
 [8 <./images/Datamodel.png>] [9]
 <images/Kommunikation.png, id=50, 707.64375pt x 522.95375pt>
 File: images/Kommunikation.png Graphic file (type png)
 <use images/Kommunikation.png>
-Package pdftex.def Info: images/Kommunikation.png  used on input line 245.
+Package pdftex.def Info: images/Kommunikation.png  used on input line 243.
 (pdftex.def)             Requested size: 347.12354pt x 256.52885pt.
 
-Overfull \hbox (2.90375pt too wide) in paragraph at lines 247--248
+Overfull \hbox (2.90375pt too wide) in paragraph at lines 245--246
 []\OT1/cmr/m/n/10 Die Kom-mu-ni-ka-ti-on zwi-schen Smar-tAI und dem Ai-Ser-vice
  er-folgt []uber REST-
  []
 
 
-Overfull \hbox (5.09929pt too wide) in paragraph at lines 255--257
-[]\OT1/cmr/m/n/10 Der MqttS-er-vice funk-tio-niert nach dem Publish-Subscribe P
-rin-zip. Der MqttS-
+Overfull \hbox (6.2104pt too wide) in paragraph at lines 253--255
+[]\OT1/cmr/m/n/10 Der MqttS-er-vice funk-tio-niert nach dem Publish-Subscribe-P
+rinzip. Der MqttS-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 255--257
+Underfull \hbox (badness 10000) in paragraph at lines 253--255
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 262--263
-
- []
-
-[10 <./images/Kommunikation.png>] [11] (samplepaper.bbl
-
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
-
-) [12] (samplepaper.aux) ) 
+[10 <./images/Kommunikation.png>] [11] (samplepaper.bbl) [12] (samplepaper.aux)
+ ) 
 Here is how much of TeX's memory you used:
- 4158 strings out of 478868
- 61143 string characters out of 2848809
- 573666 words of memory out of 3000000
- 22036 multiletter control sequences out of 15000+600000
- 406768 words of font info for 38 fonts, out of 8000000 for 9000
+ 4171 strings out of 478868
+ 61278 string characters out of 2848809
+ 559678 words of memory out of 3000000
+ 22043 multiletter control sequences out of 15000+600000
+ 408599 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 61i,6n,70p,426b,1374s stack positions out of 5000i,500n,10000p,200000b,80000s
- <C:\Users\brock\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\tcrm0700.pk><C:/Users/brock/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/brock/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/brock/AppData/Local
-/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/brock/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/
-brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C
-:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7
-.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmr9.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmsy7.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmti10.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on samplepaper.pdf (12 pages, 273710 bytes).
+ 61i,9n,70p,424b,1374s stack positions out of 5000i,500n,10000p,200000b,80000s
+<C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmbx10.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmbx7.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/brock/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/brock/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/brock/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/brock
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/User
+s/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><
+C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
+y7.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmti10.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmti9.pfb><C:/Users/brock/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmtt9.pfb>
+Output written on samplepaper.pdf (12 pages, 317402 bytes).
 PDF statistics:
- 107 PDF objects out of 1000 (max. 8388607)
+ 117 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
