@@ -51,10 +51,10 @@ Darüber hinaus sollen Empfehlungen zur Route beziehungsweise den zu nutzenden �
 Zur Anwendungsdomäne gehören folgende Entitäten:
 
 \begin{description}
-	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit, die Kapazität seines zugeordneten Supermarktes sowie dessen momentane Auslastung. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attributen werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereit gestellt.
+	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit, die Kapazität seines zugeordneten Supermarktes sowie dessen momentane Auslastung. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attribute werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereitgestellt.
 	\item[Nutzer] Ein Nutzer hat einen Standort, welcher vom Client bei der Anfrage an das System weitergegeben wird. Zusätzlich wählt der Nutzer aus, nach welcher Art Shop er suchen möchte. Auf dieser Basis bekommt er einen Shop und gegebenenfalls eine Route empfohlen.
 	\item[GeoPosition] Die GeoPosition gibt die geografische Position basierend auf dem Längen- und Breitengrad an.
-	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Handelt es sich beispielsweise um ein Einkaufszentrum gehören dazu noch eine Liste weiterer Shops.
+	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften, beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Zusätzlich wird noch eine Liste an SensorAreas gespeichert.
 	\item[ShopType] Der ShopType gibt an, um was für eine Art Shop es sich handelt.
 Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
 	
@@ -80,7 +80,7 @@ Der Datenbankserver ist ein IBM z15.
 Auf diesem läuft ein MariaDB 10.6.4.
 In der Datenbank gibt es die Schematas SensorData und Shop.
 Des Weiteren liefert das Backend den Frontend Client aus.
-Welcher beispielsweise auf einem Chromebook ausgeliefert werden kann.
+Der Frontend Client kann dann beispielsweise auf einem Chromebook ausgeliefert werden.
 Das Frontend kann dann in einem Brwoser, zum Beispiel in Google Chrome, aufgerufen werden.
 Backend und Frontend kommunizieren über das HTTPS-Protokoll.
 Außerdem werden im Verteilungsdiagramm ein MqttBroker und die dazu gehörenden Sensoren dargestellt.
@@ -133,7 +133,7 @@ Dieses Verhalten würde das Beobachter-Muster eher erweitern oder imitieren und 
 
 \newpage
 \section{Beschreibung der Kernfunktionalität}
-Eine der Kernfunktionalitäten ist es, die Auslastung von Shops zu ermitteln und mit dieser Information weiter zu arbeiten.
+Eine der Kernfunktionalitäten der verteilten Anwendung ist es, die Auslastung von Shops zu ermitteln und mit diesen Informationen weiter zu arbeiten.
 Daher stellen wir in diesem Abschnitt die Funktionalität zur Ermittlung der Auslastung eines Shops vom Typ ShoppingCenter dar.
 
 \includegraphics[width=\linewidth]{images/Sequenzdiagramm}
@@ -141,7 +141,7 @@ In dem im Sequenzdiagramm beschriebenen Beispiel möchte ein Client die Auslastu
 \\
 
 \textbf{SmartShopService}: In diesem Beispiel wird davon ausgegangen, dass es bei der Auflösung einer bestimmten ShopOID nicht zu einem Fehler kommt sondern die Auflösung immer erfolgreich ist.
-Die Methode \textbf{\textit{calculateUsage}} berechnet die aktuelle Auslastung des Shops welcher über seine ShopOID angefordert wird.
+Die Methode \textbf{\textit{calculateUsage}} berechnet die aktuelle Auslastung des Shops, welcher über seine ShopOID angefordert wird.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateUsage(int shopOID){
 	Shop tmp = datenbankService.getShop(shopOID);
@@ -159,19 +159,14 @@ public Shop getShop(int shopOID){
 \end{lstlisting}
 
 \break
-\textbf{Shop}: Die Methode \textbf{\textit{calculateCustomerCount}} iteriert über die Liste seiner Sensoren und summiert deren Kunden auf.
-Darauf hin iteriert die Methode über die Shops die dem aktuellen Shop zugeordnet sind und ruft darauf \textbf{\textit{calculateCustomerCount}} auf, um die Anzahl der zurück gegebenen Kunden aufzusummieren.
+\textbf{Shop}: Zur Berechnung der Anzahl an Personen in der Methode \textbf{\textit{calculateCustomerCount}} des Shops wird über die Liste der SensorAreas iteriert.
+Für jede SensorArea wird die wiederum die Anzahl an Personen berechnet und die Rückgabewerte werden im Shop aufsummiert.
 Die Methode liefert die aufsummierte Anzahl an Kunden in dem Shop zurück.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateCustomerCount(){
 	int customerCount = 0;
-	List[Shop] shopList;
-	List[Sensor] sensorList;
-	for(Sensor sensor : sensorList){
-		customerCount += sensor.getCustomerCount();
-	}
-	for(Shop shop : shopList){
-		customerCount += shop.calculateCustomerCount();
+	for (SensorArea sensorArea : this.getSensorAreas()) {
+		customerCount += sensorArea.calculateCustomerCount();
 	}
 	return customerCount;
 }
@@ -180,16 +175,7 @@ public int calculateCustomerCount(){
 Die Methode \textbf{\textit{calculateUsage}}, berechnet die momentane Auslastung eines Shops basierend auf seiner Kapazität, der aktuellen Anzahl seiner Kunden und der Anzahl von Kunden seiner untergeordneten SensorAreas.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateUsage(){
-	int customerCount = 0;
-	List[Shop] shopList;
-	List[Sensor] sensorList;
-	for(Shop shop : shopList){
-		customerCount = shop.calculateCustomerCount();
-	}
-	for(Sensor sensor : sensorList){
-		customerCount = sensor.getCustomerCount();
-	}
-	return capacity - customerCount;
+	return this.calculateCustomerCount() / this.capacity;
 }
 \end{lstlisting}
 
@@ -210,7 +196,7 @@ public int calculateUsage(){
 		\item [parentOID:] Die parentOID ist ein Fremdschlüssel auf eine möglicherweise übergeordneten SensorArea, das Attribut kann leer sein.
 	\end{description} 
 	Die Parent-Child-Beziehung beschreibt das im Entwurfsmuster dargestellte Komposit.
-	\item[Sensor] Der Sensor besitzt das Feld sensorOID, welches eine eindeutige ID ist und als Primärschlüssel fungiert. Außerdem besitzt es das Feld shopOID als Fremdschlüssel, welcher auf einen eindeutigen Shop zeigt, das Feld kann leer sein.
+	\item[Sensor] Der Sensor besitzt das Feld sensorOID, welches eine eindeutige ID ist und als Primärschlüssel fungiert. Außerdem besitzt er das Attribut shopOID als Fremdschlüssel, welches auf einen Shop verweist, das Attribut kann leer sein.
 	\item[SensorData] SensorData besitzt folgende Attribute:
 	\begin{description}
 		\item[dataOID:] Die dataOID ist eine eindeutige ID und fungiert als Primärschlüssel.
@@ -223,7 +209,8 @@ public int calculateUsage(){
 In der Datenhaltung werden die Entitäten Shop, Sensor und SensorData gespeichert.
 Eine weitere Entität wäre die geografische Position, da diese aber in einer eins-zu-eins-Beziehung zur Entität Shop steht, werden die Daten direkt im Shop gespeichert.
 
-Der DatenbankService verwendet JPA und setzt dabei auf einen Entity Manager.
+Der DatenbankService verwendet Spring Data JPA.
+Dadurch werden sowohl die benötigten Tabellen als auch die via Methodennamen definierten Datenbankabfragen automatisch generiert.
 Die gewählte Datenbank ist eine MariaDB, welche auf einem eigenen Server ausgeliefert wird.
 
 
@@ -236,7 +223,7 @@ Ich habe mich für Spring Data JPA entschieden, da es durch Spring standardisier
 
 Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokumentenorientierte Datenbank.
 Ich habe mich gegen diese Form von Datenbanken entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL dies nicht bietet.
-Für eine NoSQL Datenbank würde sprechen, dass man die Sensordaten welche mit einem Zeitstempel versehen werden in eine Zeitreihen-Datenbank auslagern kann.
+Da die Sensordaten mit einem Zeitstempel versehen werden, könnten sie in einer Zeitreihen-Datenbank gespeichert werden.
 
 Weitere Datenbankenmodelle wären zum Beispiel eine dokumentenorientierte Datenbank oder Graphdatenbank. Beide Modelle eignen sich für diesen Anwendungsfall nicht, da weder mit Dokumenten noch mit Graphen gearbeitet wird.
 \newpage
@@ -276,6 +263,7 @@ Außerdem bietet REST die Möglichkeit Services einfach nach außen, beispielswe
 
 JDBC wird verwendet, da es Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbankserver kommunizieren kann.
 Ähnlich wie bei REST könnte man auch hier eine direkte Kommunikation implementieren, muss dann allerdings auch den Aufwand betreiben und bei Änderungen die Kommunikation anpassen.
+Darüber hinaus muss im Datenbankserver eine andere Protokollform aktiviert werden, über die dann kommuniziert werden kann.
 
 Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den Sensoren vereinfacht.
 So muss der Programmierer sich nicht darum kümmern wie viele Sensoren existieren und muss nur eingehende Änderungen verarbeiten.
@@ -283,10 +271,10 @@ Hier wieder das Problem, man muss über eine Middleware arbeiten, welche nicht z
 
 
 \newpage
+\bibliographystyle{alphadin}
 \bibliography{lit}
 Tilkov, Stefan, et al. REST und HTTP: Entwicklung und 
 Integration nach dem Architekturstil des Web. dpunkt. verlag, 
 2015
-\bibliographystyle{alpha}
 
 \end{document}
