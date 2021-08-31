@@ -42,8 +42,8 @@ Auch außerhalb von Pandemien lässt sich die bestehende Infrastruktur durch ein
 Auf diesen Erkenntnissen basierend entstand die Idee einer verteilten Anwendung zur Optimierung der Auslastung von Supermärkten.
 
 Die Anwendung soll dem Anwender Informationen zur aktuellen Auslastung eines Supermarktes geben.
-Außerdem sollen dem Anwender Supermärkte anhand der Auslastung und der erreichbarkeit empfohlen werden.
-Zu dem System gehören die Ein- und Ausgangssensoren von Supermärkten, Standortdaten von Nutzern, eine Forecast AI zum prognostizieren von möglichen Auslastungen, eine Datenbank zum Vorhalten von sensorischen Daten, ein Frontend Client zur Bedienung durch den Nutzer und ein Backend zum Aufbereiten und Bereitstellen der Daten.
+Außerdem sollen dem Anwender Supermärkte anhand der Auslastung und der Erreichbarkeit empfohlen werden.
+Zu dem System gehören die Ein- und Ausgangssensoren von Supermärkten, Standortdaten von Nutzern, eine SmartAI zum prognostizieren von möglichen Auslastungen, eine Datenbank zum Vorhalten von sensorischen Daten, ein Frontend Client zur Bedienung durch den Nutzer und ein Backend zum Aufbereiten und Bereitstellen der Daten.
 
 Durch die Kombination von statistischen Erfahrungswerten mit Umweltdaten wie dem Wetter, stattfindenden Events oder Baustellen und Streckensperrungen soll bestimmt werden, wann welcher Supermarkt am besten zu nutzen ist.
 Darüber hinaus sollen Empfehlungen zur Route beziehungsweise den zu nutzenden öffentlichen Verkehrsmitteln gegeben werden.
@@ -51,7 +51,7 @@ Darüber hinaus sollen Empfehlungen zur Route beziehungsweise den zu nutzenden �
 Zur Anwendungsdomäne gehören folgende Entitäten:
 
 \begin{description}
-	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit, die Kapazität seines zugeordneten Supermarktes sowie dessen momentane Auslastung. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attribute werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereitgestellt.
+	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit und die Anzahl an Kunden in seinem zugewiesenen Bereich. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attribute werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereitgestellt.
 	\item[Nutzer] Ein Nutzer hat einen Standort, welcher vom Client bei der Anfrage an das System weitergegeben wird. Zusätzlich wählt der Nutzer aus, nach welcher Art Shop er suchen möchte. Auf dieser Basis bekommt er einen Shop und gegebenenfalls eine Route empfohlen.
 	\item[GeoPosition] Die GeoPosition gibt die geografische Position basierend auf dem Längen- und Breitengrad an.
 	\item[SensorArea] Eine SensorArea ist ein abstraktes Konstrukt, das jeweils von Sensor und Shop implementiert wird. Er stellt einen Bereich dar der durch einen oder mehr Sensoren abgedeckt werden kann.
@@ -263,16 +263,15 @@ Außerdem stellt der Datenbankserver eine Schnittstelle bereit, um via SQL Daten
 Dieser Endpunkt wird allerdings nur vom Backend über JDBC angesprochen und sollte von außen nicht erreichbar sein.
 
 \subsection{Begründung}
-Eine  REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System ermöglicht.
+Eine REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System ermöglicht.
 Dadurch ist gewährleistet, dass weitere Services einfach ergänzt und ersetzt beziehungsweise bestehende Services erweitert werden können, ohne dass die Schnittstelle selbst angepasst werden müssen.
-
-Eine Alternative wäre es, Services direkt über die jeweilige IP anzusprechen.
-Der Vorteil wäre, dass man dadurch eine größere Flexibilität und eine bessere Performance realisieren kann.
-Der Nachteil dabei ist, dass der Programmierer die Kommunikation selbst implementieren muss und anpassen muss, sollte es zu Änderungen im System kommen.
 Außerdem bietet REST die Möglichkeit Services einfach nach außen, beispielsweise ins World Wide Web, verfügbar zu machen.
+Eine Alternative zu REST wären beispielsweise WebSockets\footnote{\url{https://developer.mozilla.org/de/docs/Web/API/WebSockets\_API}}, welche als Basis für einen MessageBroker ähnlich wie bei MQTT verwendet werden können.
+In diesem Kontext wurde sich gegen WebSocket entschieden, da die Kommunikation zwischen Client und Server synchron erfolgen kann.
+Außerdem würden WebSockets eine nicht benötigte Komplexität in das Projekt bringen.
 
-JDBC wird verwendet, da es Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbankserver kommunizieren kann.
-Ähnlich wie bei REST könnte man auch hier eine direkte Kommunikation implementieren, muss dann allerdings auch den Aufwand betreiben und bei Änderungen die Kommunikation anpassen.
+JDBC wird verwendet, da es als Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbankserver kommunizieren kann.
+Ähnlich wie bei REST kann auch hier eine direkte Kommunikation verwendet werden, es muss dann allerdings auch der Aufwand betreiben werden und bei Änderungen die Kommunikation anpassen.
 Darüber hinaus muss im Datenbankserver eine andere Protokollform aktiviert werden, über die dann kommuniziert werden kann.
 
 Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den Sensoren vereinfacht.
