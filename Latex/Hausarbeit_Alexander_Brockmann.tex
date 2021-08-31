@@ -4,6 +4,7 @@
 %
 \documentclass[runningheads]{llncs}
 \usepackage{listings}
+\usepackage{float}
 %
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
@@ -58,19 +59,20 @@ Zur Anwendungsdomäne gehören folgende Entitäten:
 	Er stellt einen Bereich dar, der durch einen oder mehreren Sensoren abgedeckt werden kann.
 	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften, beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Zusätzlich wird noch eine Liste an SensorAreas gespeichert.
 	\item[ShopType] Der ShopType gibt an, um was für eine Art Shop es sich handelt.
-Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
-	
+	Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
 \end{description}
+\newpage
 
 
 \section{Architektur des Projektes}
 
-\includegraphics[width=\linewidth]{images/deployment_diagram}
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{images/deployment_diagram}
+	\caption{Verteilungsdiagramm}
+\end{figure}
 
 
 \subsection{Beschreibung der Systemarchitektur}
-
-
 Der Server, auf dem die Anwendung läuft, kann beispielsweise ein Sun Ice 9001 sein.
 Dieser wird mit dem Betriebssystem Ubuntu 20.04 LTS betrieben, da es Open Source, kostenlos und gut dokumentiert ist.
 Darin wird zum einen die SmartAi.py ausgeführt, welche in der Laufzeitumgebung Python 3.5 läuft. 
@@ -99,7 +101,12 @@ Die Architektur wurde gewählt, um die Anwendung möglichst modular zu halten un
 \section{Entwurfsmuster}
 
 \subsection{Darstellung der Entwurfsmuster als Klassendiagramm}
+
+\begin{figure}
 \includegraphics[width=\linewidth]{images/OOD-Klassendiagram}
+\caption{Klassendiagramm der verteilten Anwendung}
+\end{figure}
+
 \begin{description}
 \item[Komposit]
 Das Komposit wird verwendet, damit komplexe Strukturen wie zum Beispiel Einkaufszentren dargestellt werden können.
@@ -140,7 +147,11 @@ Dieses sogenannte Busy Waiting ist sehr ressourcenintensiv und sollte daher verm
 Eine der Kernfunktionalitäten der verteilten Anwendung ist es, die Auslastung von Shops zu ermitteln und mit diesen Informationen weiter zu arbeiten.
 Daher stellen wir in diesem Abschnitt die Funktionalität zur Ermittlung der Auslastung eines Shops vom Typ ShoppingCenter dar.
 
-\includegraphics[width=\linewidth]{images/Sequenzdiagramm}
+\begin{figure}
+	\includegraphics[width=\linewidth]{images/Sequenzdiagramm}
+	\caption{Sequenzieller Ablauf des Aufrufes der Funktion \textbf{\textit{calculateUsage}}}
+\end{figure}
+
 In dem im Sequenzdiagramm beschriebenen Beispiel möchte ein Client die Auslastung eines bestimmten Shops abfragen und ruft daher die Methode calculateUsage auf dem SmartShopService auf.
 \\
 
@@ -187,7 +198,12 @@ public int calculateUsage(){
 \section{Persistente Datenhaltung}
 
 \subsection{Persistierungansatz}
+
+\begin{figure}
 \includegraphics[width=\linewidth]{images/Datamodel}
+\caption{Datenmodell der Persistierung}
+\end{figure}
+
 \begin{description}
 	\item[Shop] Der Shop besitzt eine eindeutige ID, welche als Primärschlüssel dient. 
 	Des Weiteren besitzt er folgende Attribute: 
@@ -219,7 +235,7 @@ Die gewählte Datenbank ist eine MariaDB, welche auf einem eigenen Server ausgel
 
 
 \subsection{Begründung}
-Da die Daten einfach strukturiert sind und eine eindeutige ID besitzen, habe ich mich für eine SQL Datenbank entschieden.
+Da die Daten einfach strukturiert sind und eine eindeutige ID besitzen, wurde sich für eine SQL Datenbank entschieden.
 Durch diese Datenstruktur ist ein schneller, sicherer und einfacher Zugriff möglich.
 Die gewählte Datenbank ist eine MariaDB, da diese frei verfügbare OpenSource-Lösung zu MySQL ist.
 Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. 
@@ -242,7 +258,10 @@ Graphdatenbanken eignen sich für diesen Anwendungsfall nicht, da die zu speiche
 \section{Kommunikation}
 
 \subsection{Kommunikationsansatz}
+\begin{figure}
 \includegraphics[width=\linewidth]{images/Kommunikation}
+\caption{Kommunikationsmodell des verteilten Systems}
+\end{figure}
 
 Die Kommunikation zwischen SmartAI und dem AiService erfolgt über REST-Schnittstellen mit dem HTTP-Protokoll, diese Kommunikation ist synchron.
 
