@@ -254,7 +254,7 @@ Der DatenbankService kommuniziert ähnlich wie die SmartAi über JDBC mit der Da
 Der MqttService funktioniert nach dem Publish-Subscribe-Prinzip. Der MqttService subscribed sich auf die Nachrichten vom MqttBroker, welcher wiederum die Nachrichten der Sensoren sammelt und an seine Subscriber weiterleitet.
 Der MqttBroker dient als Middleware, es wird das MQTT-Protokoll verwendet und die Kommunikation ist asynchron. \\
 
-Die nach außen bereitgestellten Schnittstellen sind vom Backend ausgehend REST-Schnittstellen, um Metainformationen anzufordern, wie zum Beispiel die aktuelle Auslastung eines Shops.
+Über die bereitgestellten REST-Schnittstellen können Metainformationen angefragt werden, zum Beispiel die aktuelle Auslastung eines Shops.
 Außerdem gibt es eine Schnittstelle die den besten Weg basierend auf dem aktuellen Standort und dem ausgewählten ShopType zurückgibt.
 Beide Daten werden bei der Anfrage als Parameter mitgegeben.
 Diese Schnittstellen werden im Regelfall vom Frontend angesprochen.
