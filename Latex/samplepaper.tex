@@ -54,7 +54,8 @@ Zur Anwendungsdomäne gehören folgende Entitäten:
 	\item[Sensordaten] Ein Sensor erfasst seinen aktuellen Standort, die aktuelle Zeit und die Anzahl an Kunden in seinem zugewiesenen Bereich. Ein solcher Sensor ist mittlerweile in vielen Supermärkten im Einsatz. Die oben genannten Attribute werden in der Entität \textit{SensorData} zusammengefasst und in regelmäßigen Abständen bereitgestellt.
 	\item[Nutzer] Ein Nutzer hat einen Standort, welcher vom Client bei der Anfrage an das System weitergegeben wird. Zusätzlich wählt der Nutzer aus, nach welcher Art Shop er suchen möchte. Auf dieser Basis bekommt er einen Shop und gegebenenfalls eine Route empfohlen.
 	\item[GeoPosition] Die GeoPosition gibt die geografische Position basierend auf dem Längen- und Breitengrad an.
-	\item[SensorArea] Eine SensorArea ist ein abstraktes Konstrukt, das jeweils von Sensor und Shop implementiert wird. Er stellt einen Bereich dar der durch einen oder mehr Sensoren abgedeckt werden kann.
+	\item[SensorArea] Eine SensorArea ist ein abstraktes Konstrukt, das jeweils von Sensor und Shop implementiert wird. 
+	Er stellt einen Bereich dar, der durch einen oder mehreren Sensoren abgedeckt werden kann.
 	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften, beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Zusätzlich wird noch eine Liste an SensorAreas gespeichert.
 	\item[ShopType] Der ShopType gibt an, um was für eine Art Shop es sich handelt.
 Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
@@ -73,7 +74,7 @@ Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität bere
 Der Server, auf dem die Anwendung läuft, kann beispielsweise ein Sun Ice 9001 sein.
 Dieser wird mit dem Betriebssystem Ubuntu 20.04 LTS betrieben, da es Open Source, kostenlos und gut dokumentiert ist.
 Darin wird zum einen die SmartAi.py ausgeführt, welche in der Laufzeitumgebung Python 3.5 läuft. 
-Python ist eine gängige Sprache für KI-Lösungen verwendet wird.
+Python ist eine gängige Sprache, die für KI-Lösungen verwendet wird.
 Zum anderen wird dort die SmartShopping.jar in der Laufzeitumgebung Java 14 ausgeführt.
 Auf Grund der im Studium gesammelten Erfahrung wurde sich für Java in Kombination mit Spring Boot entschieden.
 Die Spring-Applikation stellt den in Spring Boot integrierten Embedded Tomcat bereit.
@@ -143,7 +144,7 @@ Daher stellen wir in diesem Abschnitt die Funktionalität zur Ermittlung der Aus
 In dem im Sequenzdiagramm beschriebenen Beispiel möchte ein Client die Auslastung eines bestimmten Shops abfragen und ruft daher die Methode calculateUsage auf dem SmartShopService auf.
 \\
 
-\textbf{SmartShopService}: In diesem Beispiel wird davon ausgegangen, dass es bei der Auflösung einer bestimmten ShopOID nicht zu einem Fehler kommt sondern die Auflösung immer erfolgreich ist.
+\textbf{SmartShopService}: In diesem Beispiel wird davon ausgegangen, dass es bei der Auflösung einer bestimmten ShopOID nicht zu einem Fehler kommt, sondern die Auflösung immer erfolgreich ist.
 Die Methode \textbf{\textit{calculateUsage}} berechnet die aktuelle Auslastung des Shops, welcher über seine ShopOID angefordert wird.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateUsage(int shopOID){
@@ -196,7 +197,7 @@ public int calculateUsage(){
 		\item [size:] Das Attribut size beschreibt die Grundfläche des Shops.
 		\item [shopType:] ShopType repräsentiert den Typ des Shops.
 		\item [lat, lng:] lat und lng beschreiben den Breiten- und Längengrad des Shops. Die Daten kommen aus der Entität \textbf{GeoPosition}, welche aber in diesem Kontext innerhalb des Shops persistiert wird, da Shop und GeoPosition in einer eins-zu-eins-Beziehung stehen.
-		\item [parentOID:] Die parentOID ist ein Fremdschlüssel auf eine möglicherweise übergeordneten SensorArea, das Attribut kann leer sein.
+		\item [parentOID:] Die parentOID ist ein Fremdschlüssel auf eine möglicherweise übergeordneten SensorArea. Das Attribut kann leer sein.
 	\end{description} 
 	Die Parent-Child-Beziehung beschreibt das im Entwurfsmuster dargestellte Komposit.
 	\item[Sensor] Der Sensor besitzt das Feld sensorOID, welches eine eindeutige ID ist und als Primärschlüssel fungiert. Außerdem besitzt er das Attribut shopOID als Fremdschlüssel, welches auf einen Shop verweist, das Attribut kann leer sein.
@@ -223,15 +224,15 @@ Durch diese Datenstruktur ist ein schneller, sicherer und einfacher Zugriff mög
 Die gewählte Datenbank ist eine MariaDB, da diese frei verfügbare OpenSource-Lösung zu MySQL ist.
 Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. 
 Außerdem können Anwendungen, anders als bei einer In-Memory Datenbank, unabhängig voneinander auf die Datenbank zugreifen.
-Ich habe mich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert.
-Außerdem nimmt es dem Programmierer einiges an Arbeit ab.
+Es wurde sich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert.
+Zudem unterstützt es den Entwickler bei seiner Arbeit  und verringert so den Aufwand von Routineaufgaben in der Datenbankanbindung.
 Beispielsweise ist es nicht mehr notwendig eigene Abfragen zu definieren, da diese anhand der Methodennamen im entsprechenden Reopsitory Interface generiert werden.
 Darüber hinaus werden die Tabellendefinitionen aus den Klassen generiert, sodass es nicht nötig ist, diese manuell zu erstellen.
 Auch das Mapping von Fremdschlüsselbeziehungen auf die jeweiligen Objekt geschieht automatisch.
 Diese Vorteile überwiegen den Nachteil, dass weitere Abhängigkeiten in den Code geladen werden.
 
 Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokumentenorientierte Datenbank.
-Ich habe mich gegen diese Form von Datenbanken entschieden, da ich mit einem festen Schema arbeiten möchte und NoSQL dies nicht bietet.
+Es wurde sich gegen diese Form von Datenbanken entschieden, da mit einem festen Schema gearbeitet wird und NoSQL dies nicht unterstützt.
 Da die Sensordaten mit einem Zeitstempel versehen werden, könnten sie in einer Zeitreihen-Datenbank gespeichert werden.
 Hier wird allerdings die MariaDB verwendet damit das Mapping der Fremdschlüssel durch Spring Data JPA abgewickelt wird.
 
@@ -252,7 +253,7 @@ Der Frontend Client kommuniziert mit dem SmartShopService über HTTPS und eine R
 Der DatenbankService kommuniziert ähnlich wie die SmartAi über JDBC mit der Datenbank. Die Kommunikation ist synchron mit JDBC als Middleware.
 
 Der MqttService funktioniert nach dem Publish-Subscribe-Prinzip. Der MqttService subscribed sich auf die Nachrichten vom MqttBroker, welcher wiederum die Nachrichten der Sensoren sammelt und an seine Subscriber weiterleitet.
-Der MqttBroker dient als Middleware, es wird das MQTT-Protokoll verwendet und die Kommunikation ist asynchron. \\
+Der MqttBroker dient als Middleware, es wird das MQTT-Protokoll verwendet und die Kommunikation ist asynchron.
 
 Über die bereitgestellten REST-Schnittstellen können Metainformationen angefragt werden, zum Beispiel die aktuelle Auslastung eines Shops.
 Außerdem gibt es eine Schnittstelle die den besten Weg basierend auf dem aktuellen Standort und dem ausgewählten ShopType zurückgibt.
@@ -278,7 +279,7 @@ Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den
 So muss der Programmierer sich nicht darum kümmern, wie viele Sensoren existieren und muss nur eingehende Änderungen verarbeiten.
 Außerdem werden Änderungen in den Sensordaten so automatisch an den Server gesendet und der Server muss diese Änderungen nicht aktiv abfragen.
 So wird Busy Waiting vermieden.
-Hier wieder das Problem, man muss über eine Middleware arbeiten, welche nicht zwangsläufig optimiert funktioniert.
+Hier existiert wieder das Problem, dass Middleware eingesetzt werden muss, welche nicht zwangsläufig für diesen Anwendungsfall optimiert ist.
 
 
 \newpage
