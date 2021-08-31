@@ -76,18 +76,18 @@ Dieser wird mit dem Betriebssystem Ubuntu 20.04 LTS betrieben, da es Open Source
 Darin wird zum einen die SmartAi.py ausgeführt, welche in der Laufzeitumgebung Python 3.5 läuft. 
 Python ist eine gängige Sprache, die für KI-Lösungen verwendet wird.
 Zum anderen wird dort die SmartShopping.jar in der Laufzeitumgebung Java 14 ausgeführt.
-Auf Grund der im Studium gesammelten Erfahrung wurde sich für Java in Kombination mit Spring Boot entschieden.
+Auf Grund der im Studium gesammelten Erfahrung wurde sich für Java in Kombination mit Spring Boot\footnote{\url{https://spring.io/projects/spring-boot}} entschieden.
 Die Spring-Applikation stellt den in Spring Boot integrierten Embedded Tomcat bereit.
 Die SmartAi.py und die SmartShopping.jar kommunizieren intern via REST-Schnittellen mit dem HTTP-Protokoll.
 Mit dem Datenbankserver kommunizieren sie mit dem JDBC-Protokoll.
 Der Datenbankserver wird beispielsweise auf einem IBM z15 ausgeliefert.
-Auf diesem läuft eine MariaDB 10.6.4.
+Auf diesem läuft eine MariaDB\footnote{\url{https://mariadb.org/}} 10.6.4.
 In der Datenbank gibt es die Schemata SensorData und Shop.
 
 Des Weiteren liefert das Backend den Frontend Client in Form einer Thymeleaf\footnote{\url{https://www.thymeleaf.org/}}-Anwendung aus.
 Der Frontend Client wird beispielsweise auf einem Chromebook ausgeliefert und kann dann über einen Browser beispielsweise Chrome aufgerufen werden.
 Backend und Frontend kommunizieren über das HTTPS-Protokoll.
-Außerdem werden im Verteilungsdiagramm ein MqttBroker und die dazu gehörenden Sensoren dargestellt.
+Außerdem werden im Verteilungsdiagramm ein MqttBroker\footnote{\url{https://mqtt.org/}} und die dazu gehörenden Sensoren dargestellt.
 Da der Fokus nicht auf dem Erheben der Daten liegt, wird nicht näher auf den MqttBroker und die dazu gehörenden Sensoren eingegangen.
 
 \subsection{Einordnung der Architekturentscheidungen}
@@ -267,7 +267,7 @@ Dieser Endpunkt wird allerdings nur vom Backend über JDBC angesprochen und soll
 Eine REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System ermöglicht.
 Dadurch ist gewährleistet, dass weitere Services einfach ergänzt und ersetzt beziehungsweise bestehende Services erweitert werden können, ohne dass die Schnittstelle selbst angepasst werden müssen.
 Außerdem bietet REST die Möglichkeit Services einfach nach außen, beispielsweise ins World Wide Web, verfügbar zu machen.
-Eine Alternative zu REST wären beispielsweise WebSockets\footnote{\url{https://developer.mozilla.org/de/docs/Web/API/WebSockets\_API}}, welche als Basis für einen MessageBroker ähnlich wie bei MQTT verwendet werden können.
+Eine Alternative zu REST wären beispielsweise WebSockets, welche als Basis für einen MessageBroker ähnlich wie bei MQTT verwendet werden können.
 In diesem Kontext wurde sich gegen WebSocket entschieden, da die Kommunikation zwischen Client und Server synchron erfolgen kann.
 Außerdem würden WebSockets eine nicht benötigte Komplexität in das Projekt bringen.
 
