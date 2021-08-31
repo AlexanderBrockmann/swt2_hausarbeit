@@ -44,7 +44,7 @@ Auf diesen Erkenntnissen basierend entstand die Idee einer verteilten Anwendung 
 
 Die Anwendung soll dem Anwender Informationen zur aktuellen Auslastung eines Supermarktes geben.
 Außerdem sollen dem Anwender Supermärkte anhand der Auslastung und der Erreichbarkeit empfohlen werden.
-Zu dem System gehören die Ein- und Ausgangssensoren von Supermärkten, Standortdaten von Nutzern, eine SmartAI zum prognostizieren von möglichen Auslastungen, eine Datenbank zum Vorhalten von sensorischen Daten, ein Frontend Client zur Bedienung durch den Nutzer und ein Backend zum Aufbereiten und Bereitstellen der Daten.
+Zu dem System gehören die Ein- und Ausgangssensoren von Supermärkten, Standortdaten von Nutzern, eine SmartAi zum prognostizieren von zukünftigen Auslastungen, eine Datenbank zum Vorhalten der Sensordaten, ein Frontend Client zur Bedienung durch den Nutzer und ein Backend zum Aufbereiten und Bereitstellen der Daten.
 
 Durch die Kombination von statistischen Erfahrungswerten mit Umweltdaten wie dem Wetter, stattfindenden Events oder Baustellen und Streckensperrungen soll bestimmt werden, wann welcher Supermarkt am besten zu nutzen ist.
 Darüber hinaus sollen Empfehlungen zur Route beziehungsweise den zu nutzenden öffentlichen Verkehrsmitteln gegeben werden.
@@ -56,7 +56,7 @@ Zur Anwendungsdomäne gehören folgende Entitäten:
 	\item[Nutzer] Ein Nutzer hat einen Standort, welcher vom Client bei der Anfrage an das System weitergegeben wird. Zusätzlich wählt der Nutzer aus, nach welcher Art Shop er suchen möchte. Auf dieser Basis bekommt er einen Shop und gegebenenfalls eine Route empfohlen.
 	\item[GeoPosition] Die GeoPosition gibt die geografische Position basierend auf dem Längen- und Breitengrad an.
 	\item[SensorArea] Eine SensorArea ist ein abstraktes Konstrukt, das jeweils von Sensor und Shop implementiert wird. 
-	Er stellt einen Bereich dar, der durch einen oder mehreren Sensoren abgedeckt werden kann.
+	Sie stellt einen Bereich dar, der durch einen oder mehreren Sensoren abgedeckt werden kann.
 	\item[Shop] Der Shop repräsentiert ein Geschäft oder eine Ansammlung von Geschäften, beispielsweise ein Einkaufszentrum. Zu einem Shop gehört jeweils ein Name, ein ShopType, die Größe der Ladenfläche, die Kapazität und die GeoPosition. Zusätzlich wird noch eine Liste an SensorAreas gespeichert.
 	\item[ShopType] Der ShopType gibt an, um was für eine Art Shop es sich handelt.
 	Abhängig von der Art des Shops und seiner Größe wird auch die Kapazität berechnet.
@@ -87,13 +87,13 @@ Auf diesem läuft eine MariaDB\footnote{\url{https://mariadb.org/}} 10.6.4.
 In der Datenbank gibt es die Schemata SensorData und Shop.
 
 Des Weiteren liefert das Backend den Frontend Client in Form einer Thymeleaf\footnote{\url{https://www.thymeleaf.org/}}-Anwendung aus.
-Der Frontend Client wird beispielsweise auf einem Chromebook ausgeliefert und kann dann über einen Browser beispielsweise Chrome aufgerufen werden.
+Der Frontend Client wird beispielsweise an ein Chromebook ausgeliefert und kann dann über einen Browser beispielsweise Google Chrome angezeigt werden.
 Backend und Frontend kommunizieren über das HTTPS-Protokoll.
 Außerdem werden im Verteilungsdiagramm ein MqttBroker\footnote{\url{https://mqtt.org/}} und die dazu gehörenden Sensoren dargestellt.
 Da der Fokus nicht auf dem Erheben der Daten liegt, wird nicht näher auf den MqttBroker und die dazu gehörenden Sensoren eingegangen.
 
 \subsection{Einordnung der Architekturentscheidungen}
-Der Architekturstil nach Starke ist ein heterogenes System, da die Kommunikation zwischen den Services über REST-Schnittstellen realisiert ist (vgl. \cite{starke2015effektive}).
+Die Architektur ist anhand der Architekturstile nach Starke als ein heterogenes System zu klassifizieren, da die Kommunikation zwischen den Services über REST-Schnittstellen realisiert ist (vgl. \cite{starke2015effektive}).
 Des Weiteren erfolgt die Kommunikation zwischen Anwendung via HTTP, HTTPS und JDBC.
 Die Architektur wurde gewählt, um die Anwendung möglichst modular zu halten und so eine gute Austauschbarkeit von Komponenten zu gewährleisten.
 
@@ -175,7 +175,7 @@ public Shop getShop(int shopOID){
 
 \break
 \textbf{Shop}: Zur Berechnung der Anzahl an Personen in der Methode \textbf{\textit{calculateCustomerCount}} des Shops wird über die Liste der SensorAreas iteriert.
-Für jede SensorArea wird die wiederum die Anzahl an Personen berechnet und die Rückgabewerte werden im Shop aufsummiert.
+Für jede SensorArea wird wiederum die Anzahl an Personen berechnet und die Rückgabewerte werden im Shop aufsummiert.
 Die Methode liefert die aufsummierte Anzahl an Kunden in dem Shop zurück.
 \begin{lstlisting}[language=Java, basicstyle=\scriptsize]
 public int calculateCustomerCount(){
@@ -240,17 +240,17 @@ Durch diese Datenstruktur ist ein schneller, sicherer und einfacher Zugriff mög
 Die gewählte Datenbank ist eine MariaDB, da diese frei verfügbare OpenSource-Lösung zu MySQL ist.
 Die Datenbank wird auf einem eigens dafür vorgesehenen Server aufgesetzt, um eine lose Koppelung zu gewährleisten. 
 Außerdem können Anwendungen, anders als bei einer In-Memory Datenbank, unabhängig voneinander auf die Datenbank zugreifen.
-Es wurde sich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und datenbankunabhängig funktioniert.
+Es wurde sich für Spring Data JPA entschieden, da es durch Spring standardisiert ist und weitestgehend datenbankunabhängig funktioniert.
 Zudem unterstützt es den Entwickler bei seiner Arbeit  und verringert so den Aufwand von Routineaufgaben in der Datenbankanbindung.
-Beispielsweise ist es nicht mehr notwendig eigene Abfragen zu definieren, da diese anhand der Methodennamen im entsprechenden Reopsitory Interface generiert werden.
-Darüber hinaus werden die Tabellendefinitionen aus den Klassen generiert, sodass es nicht nötig ist, diese manuell zu erstellen.
+Beispielsweise ist es nicht mehr notwendig, eigene Abfragen zu definieren, da diese anhand der Methodennamen im entsprechenden Reopsitory Interface generiert werden.
+Darüber hinaus werden die Tabellendefinitionen anhand der Java-Klassen generiert, sodass es nicht nötig ist, diese manuell zu erstellen.
 Auch das Mapping von Fremdschlüsselbeziehungen auf die jeweiligen Objekt geschieht automatisch.
 Diese Vorteile überwiegen den Nachteil, dass weitere Abhängigkeiten in den Code geladen werden.
 
 Eine Alternative zu MariaDB wäre neben dem bereits erwähnten MySQL eine dokumentenorientierte Datenbank.
 Es wurde sich gegen diese Form von Datenbanken entschieden, da mit einem festen Schema gearbeitet wird und NoSQL dies nicht unterstützt.
 Da die Sensordaten mit einem Zeitstempel versehen werden, könnten sie in einer Zeitreihen-Datenbank gespeichert werden.
-Hier wird allerdings die MariaDB verwendet damit das Mapping der Fremdschlüssel durch Spring Data JPA abgewickelt wird.
+Hier wird allerdings eine MariaDB verwendet, damit das Mapping der Fremdschlüssel durch Spring Data JPA abgewickelt wird.
 
 Graphdatenbanken eignen sich für diesen Anwendungsfall nicht, da die zu speichernden Daten nicht in einem Graph dargestellt werden können.
 \newpage
@@ -263,7 +263,7 @@ Graphdatenbanken eignen sich für diesen Anwendungsfall nicht, da die zu speiche
 \caption{Kommunikationsmodell des verteilten Systems}
 \end{figure}
 
-Die Kommunikation zwischen SmartAI und dem AiService erfolgt über REST-Schnittstellen mit dem HTTP-Protokoll, diese Kommunikation ist synchron.
+Die Kommunikation zwischen SmartAi und dem AiService erfolgt über REST-Schnittstellen mit dem HTTP-Protokoll, diese Kommunikation ist synchron.
 
 Die SmartAi kommuniziert mit dem Datenbankserver via JDBC, diese Kommunikation ist ebenfalls synchron. JDBC ist eine Middleware, welche ein standartisiertes Interface für SQL Datenbanken bereitstellt.
 
@@ -275,7 +275,7 @@ Der MqttService funktioniert nach dem Publish-Subscribe-Prinzip. Der MqttService
 Der MqttBroker dient als Middleware, es wird das MQTT-Protokoll verwendet und die Kommunikation ist asynchron.
 
 Über die bereitgestellten REST-Schnittstellen können Metainformationen angefragt werden, zum Beispiel die aktuelle Auslastung eines Shops.
-Außerdem gibt es eine Schnittstelle die den besten Weg basierend auf dem aktuellen Standort und dem ausgewählten ShopType zurückgibt.
+Außerdem gibt es eine Schnittstelle, die den besten Weg basierend auf dem aktuellen Standort und dem ausgewählten ShopType zurückgibt.
 Beide Daten werden bei der Anfrage als Parameter mitgegeben.
 Diese Schnittstellen werden im Regelfall vom Frontend angesprochen.
 
@@ -284,18 +284,18 @@ Dieser Endpunkt wird allerdings nur vom Backend über JDBC angesprochen und soll
 
 \subsection{Begründung}
 Eine REST API wird in diesem Kontext verwendet, da sie eine einfache und standardisierte Kommunikation zwischen Services in einem verteilten System ermöglicht.
-Dadurch ist gewährleistet, dass weitere Services einfach ergänzt und ersetzt beziehungsweise bestehende Services erweitert werden können, ohne dass die Schnittstelle selbst angepasst werden müssen.
+Dadurch ist gewährleistet, dass weitere Services einfach ergänzt und ersetzt beziehungsweise bestehende Services erweitert werden können, ohne dass die Schnittstelle selbst angepasst werden muss.
 Außerdem bietet REST die Möglichkeit Services einfach nach außen, beispielsweise ins World Wide Web, verfügbar zu machen.
-Eine Alternative zu REST wären beispielsweise WebSockets, welche als Basis für einen MessageBroker ähnlich wie bei MQTT verwendet werden können.
-In diesem Kontext wurde sich gegen WebSocket entschieden, da die Kommunikation zwischen Client und Server synchron erfolgen kann.
+Eine Alternative zu REST wären beispielsweise WebSockets, welche ähnlich wie bei MQTT als Basis für einen MessageBroker verwendet werden können.
+In diesem Kontext wurde sich gegen WebSockets entschieden, da die Kommunikation zwischen Client und Server synchron erfolgen soll.
 Außerdem würden WebSockets eine nicht benötigte Komplexität in das Projekt bringen.
 
 JDBC wird verwendet, da es als Middleware ein standardisiertes Interface bietet und somit der Programmierer einfach mit dem Datenbankserver kommunizieren kann.
-Ähnlich wie bei REST kann auch hier eine direkte Kommunikation verwendet werden, es muss dann allerdings auch der Aufwand betreiben werden und bei Änderungen die Kommunikation anpassen.
-Darüber hinaus muss im Datenbankserver eine andere Protokollform aktiviert werden, über die dann kommuniziert werden kann.
+Ähnlich wie bei REST kann auch hier eine direkte Kommunikation verwendet werden, es wird dann aber zusätzlicher Aufwand für die initiale Implementierung und die Implementierung von Änderungen benötigt.
+Darüber hinaus müsste im Datenbankserver eine andere Protokollform aktiviert werden, über die dann kommuniziert werden kann.
 
 Der MqttBroker wird in diesem Kontext verwendet, da er die Kommunikation mit den Sensoren vereinfacht.
-So muss der Programmierer sich nicht darum kümmern, wie viele Sensoren existieren und muss nur eingehende Änderungen verarbeiten.
+So muss der Programmierer sich nicht darum kümmern, wie viele Sensoren existieren und er muss nur eingehende Änderungen verarbeiten.
 Außerdem werden Änderungen in den Sensordaten so automatisch an den Server gesendet und der Server muss diese Änderungen nicht aktiv abfragen.
 So wird Busy Waiting vermieden.
 Hier existiert wieder das Problem, dass Middleware eingesetzt werden muss, welche nicht zwangsläufig für diesen Anwendungsfall optimiert ist.
